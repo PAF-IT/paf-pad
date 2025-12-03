@@ -20,7 +20,7 @@ spec:
           name: etherpad
           env:
             - name: PORT
-              value: '80'
+              value: '9001'
             - name: NODE_ENV
               value: production
             - name: DB_TYPE

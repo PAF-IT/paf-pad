@@ -6,7 +6,7 @@ env:
   # Set global action env variables for STAGING:
   NODE_VERSION: 'latest'
   KUBE_NAMESPACE: staging
-  SERVER_PORT: 80
+  SERVER_PORT: 9001
 
 jobs:
   deploy-staging:
