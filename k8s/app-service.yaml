@@ -7,6 +7,9 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: 9001
+    - name: port
+      targetPort: 9001
+      port: 80
+      protocol: TCP
   selector:
     app: etherpad
