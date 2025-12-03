@@ -1,0 +1,40 @@
+name: PAD STAGING - Deploy prebuilt container
+
+on: workflow_dispatch
+
+env:
+  # Set global action env variables for STAGING:
+  NODE_VERSION: 'latest'
+  KUBE_NAMESPACE: staging
+  SERVER_PORT: 80
+
+jobs:
+  deploy-staging:
+    name: Deploy to STAGING
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: https://pad.pa-f.net
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set kubectl Context
+        uses: azure/k8s-set-context@v4
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.UPCLOUD_KUBECONFIG }}
+          context: ${{ env.KUBE_NAMESPACE }}
+
+      - name: Deploy to Kubernetes
+        uses: swdotcom/update-and-apply-kubernetes-configs@v1
+        with:
+          k8-config-file-paths: |
+            k8s/app-configmap.yaml
+            k8s/app-service.yaml
+            k8s/app-deployment.yaml
+          replacement-method: defined
+          namespace: ${{ env.KUBE_NAMESPACE }}
+        env:
+          MYSQL_ETHERPAD_PASSWORD: ${{ secrets.MYSQL_ETHERPAD_PASSWORD }}
+          SERVER_PORT: ${{ env.SERVER_PORT }}
